@@ -3,7 +3,10 @@ int windowWidth = 1000;
 int windowHeight = 700;
 
 PShape star;
+PShape drop;
+
 int mouseClickStart, mouseClickEnd;
+int keyPressStart, keyPressEnd;
 
 
 void settings() {
@@ -18,7 +21,12 @@ void setup(){
   // Loading the shape
   // star svg from https://iconmonstr.com/star-3-svg/
   star = loadShape("star.svg");
+
+  // drop svg from https://iconmonstr.com/drop-1-svg/
+  drop = loadShape("drop.svg");
+
   star.disableStyle();
+  drop.disableStyle();
 }
 
 void draw() {
@@ -56,4 +64,26 @@ void mouseReleased() {
 }
 
 
-// Now 
+// Whenever a user presses a key we start the timer
+// Used in tracking the duration of the keypress
+void keyPressed() {
+  keyPressStart = millis();
+}
+
+
+void keyReleased() {
+  keyPressEnd = millis();
+  int keyPressDuration = (keyPressEnd - keyPressStart);
+  
+  // Varying opacity based on duration of key press
+  // Intensity values go from 0 to 255
+  // We hit the max (255) when a key is pressed for 5 or more seconds
+  float opacity = keyPressDuration/100.0 * 51.0;
+
+  fill(0, 0, 0, opacity);
+
+  int randX = (int)(Math.random() * (windowWidth - 20)) + 10;
+  int randY = (int)(Math.random() * (windowHeight -20)) + 10;
+
+  shape(drop, randX, randY, 20, 20);
+}
