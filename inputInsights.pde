@@ -7,6 +7,7 @@ PShape drop;
 
 int mouseClickStart, mouseClickEnd;
 int keyPressStart, keyPressEnd;
+boolean keyPressRecord = true;
 
 
 void settings() {
@@ -20,10 +21,10 @@ void setup(){
 
   // Loading the shape
   // star svg from https://iconmonstr.com/star-3-svg/
-  star = loadShape("star.svg");
+  star = loadShape("svgs/star.svg");
 
   // drop svg from https://iconmonstr.com/drop-1-svg/
-  drop = loadShape("drop.svg");
+  drop = loadShape("svgs/drop.svg");
 
   star.disableStyle();
   drop.disableStyle();
@@ -66,24 +67,50 @@ void mouseReleased() {
 
 // Whenever a user presses a key we start the timer
 // Used in tracking the duration of the keypress
+// We also use the keyPressRecord flag to avoid re-recording the same key press
+// Until it's released
 void keyPressed() {
-  keyPressStart = millis();
+  if(keyPressRecord) {
+    keyPressStart = millis();
+    keyPressRecord = false;
+  }
 }
 
 
 void keyReleased() {
+  char keyChar = key;
+
   keyPressEnd = millis();
+  keyPressRecord = true;
+
   int keyPressDuration = (keyPressEnd - keyPressStart);
   
   // Varying opacity based on duration of key press
   // Intensity values go from 0 to 255
   // We hit the max (255) when a key is pressed for 5 or more seconds
-  float opacity = keyPressDuration/100.0 * 51.0;
+  float opacity = (keyPressDuration/100.0) * 51.0;
 
-  fill(0, 0, 0, opacity);
-
+  // Selecting random coordinates for the shapes to appear
   int randX = (int)(Math.random() * (windowWidth - 20)) + 10;
   int randY = (int)(Math.random() * (windowHeight -20)) + 10;
 
-  shape(drop, randX, randY, 20, 20);
+  if(Character.isLetter(keyChar)){
+    drawDrop(keyChar, randX, randY, opacity);
+  }
+}
+
+
+void drawDrop(char letter, int xCoord, int yCoord, float opacity) {
+  char upChar = Character.toUpperCase(letter);
+
+  // Now we have drops of orange color for vowels
+  // And drops of sky blue color for consonants
+  if (upChar == 'A' || upChar == 'E' || upChar == 'I' || upChar == 'O' || upChar == 'U') {
+    fill(135, 206, 235, opacity);
+  }
+  else {
+    fill(255, 165, 0, opacity);
+  }
+
+  shape(drop, xCoord, yCoord, 20, 20);
 }
