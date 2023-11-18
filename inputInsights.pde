@@ -16,6 +16,7 @@ void setup(){
   background(255);
 
   // Loading the shape
+  // star svg from https://iconmonstr.com/star-3-svg/
   star = loadShape("star.svg");
   star.disableStyle();
 }
@@ -53,3 +54,6 @@ void mouseReleased() {
 
   shape(star, mouseX-(finalSize/2), mouseY-(finalSize/2), finalSize, finalSize);
 }
+
+
+// Now 
