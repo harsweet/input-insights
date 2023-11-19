@@ -6,10 +6,15 @@ PShape star;
 PShape drop;
 PShape snowflake;
 PShape keyShape;
+PShape cross;
 
 int mouseClickStart, mouseClickEnd;
 int keyPressStart, keyPressEnd;
 boolean keyPressRecord = true;
+
+
+// For keeping track of info about the letters typed
+ArrayList<LetterInfo> letterInfoList;
 
 
 void settings() {
@@ -20,6 +25,9 @@ void settings() {
 void setup(){
   // Setting up the background color
   background(255);
+
+  // Initializing the list
+  letterInfoList = new ArrayList<>();
 
   // Loading the shapes
   // star svg from https://iconmonstr.com/star-3-svg/
@@ -34,6 +42,8 @@ void setup(){
   // key svg from https://www.svgrepo.com/svg/4326/house-key
   keyShape = loadShape("svgs/key.svg");
 
+  // cross svg from https://www.svgrepo.com/svg/178323/cross-close
+  cross = loadShape("svgs/cross.svg");
 
   // Disabling styling so that we can apply our own styling
   star.disableStyle();
@@ -106,7 +116,23 @@ void keyReleased() {
   int randX = (int)(Math.random() * (windowWidth - 20)) + 10;
   int randY = (int)(Math.random() * (windowHeight -20)) + 10;
 
-  if(Character.isLetter(keyChar)) {
+  if (keyChar == '\b' || keyChar == '\u007F') {
+    int listSize = letterInfoList.size();
+
+    if(listSize != 0) {
+      // This means they are one or more typed letters that haven't been erased
+
+      LetterInfo lastLetterInfo = letterInfoList.get(listSize - 1);
+
+      // Superimposing a cross on the shape for that letter
+      // To symbolize its deletion
+      shape(cross, lastLetterInfo.xCoord, lastLetterInfo.yCoord, lastLetterInfo.sizeValue, lastLetterInfo.sizeValue);
+
+      // Now removing it from the list as it has been deleted
+      letterInfoList.remove(listSize - 1);
+    }
+  }
+  else if(Character.isLetter(keyChar)) {
     drawDrop(keyChar, randX, randY, opacity);
   }
   else if(Character.isDigit(keyChar)) {
@@ -131,6 +157,8 @@ void drawDrop(char letter, int xCoord, int yCoord, float opacity) {
   }
 
   shape(drop, xCoord, yCoord, 20, 20);
+
+  letterInfoList.add(new LetterInfo(xCoord, yCoord, 20));
 }
 
 
@@ -145,6 +173,8 @@ void drawSnowflake(char letter, int xCoord, int yCoord, float opacity) {
   fill(105,105,105, opacity);
 
   shape(snowflake, xCoord, yCoord, svgSize, svgSize);
+
+  letterInfoList.add(new LetterInfo(xCoord, yCoord, svgSize));
 }
 
 
@@ -153,4 +183,19 @@ void drawKey(int xCoord, int yCoord, float opacity) {
   fill(0, 0, 0, opacity);
 
   shape(keyShape, xCoord, yCoord, 20, 20);
+
+  letterInfoList.add(new LetterInfo(xCoord, yCoord, 20));
+}
+
+
+class LetterInfo {
+  float xCoord;
+  float yCoord;
+  float sizeValue;
+
+  public LetterInfo(float x, float y, float size) {
+    this.xCoord = x;
+    this.yCoord = y;
+    this.sizeValue = size;
+  }
 }
