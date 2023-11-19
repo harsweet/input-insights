@@ -4,6 +4,7 @@ int windowHeight = 700;
 
 PShape star;
 PShape drop;
+PShape snowflake;
 
 int mouseClickStart, mouseClickEnd;
 int keyPressStart, keyPressEnd;
@@ -26,8 +27,12 @@ void setup(){
   // drop svg from https://iconmonstr.com/drop-1-svg/
   drop = loadShape("svgs/drop.svg");
 
+  // snowflake from https://svgsilh.com/image/38114.html
+  snowflake = loadShape("svgs/snowflake.svg");
+
   star.disableStyle();
   drop.disableStyle();
+  snowflake.disableStyle();
 }
 
 void draw() {
@@ -94,8 +99,11 @@ void keyReleased() {
   int randX = (int)(Math.random() * (windowWidth - 20)) + 10;
   int randY = (int)(Math.random() * (windowHeight -20)) + 10;
 
-  if(Character.isLetter(keyChar)){
+  if(Character.isLetter(keyChar)) {
     drawDrop(keyChar, randX, randY, opacity);
+  }
+  else if(Character.isDigit(keyChar)) {
+    drawSnowflake(keyChar, randX, randY, opacity);
   }
 }
 
@@ -113,4 +121,18 @@ void drawDrop(char letter, int xCoord, int yCoord, float opacity) {
   }
 
   shape(drop, xCoord, yCoord, 20, 20);
+}
+
+
+void drawSnowflake(char letter, int xCoord, int yCoord, float opacity) {
+  int integerValue = Character.getNumericValue(letter);
+
+  // The size of the svg is based upon the numerical value of the digit typed
+  // 5.6 is the minimum size (when 0 is typed) and 20 is the maximum size (when 9 is typed)
+  float svgSize = 5.6 + (1.6 * integerValue);
+
+  // Choosing a grey color for the fill
+  fill(105,105,105, opacity);
+
+  shape(snowflake, xCoord, yCoord, svgSize, svgSize);
 }
