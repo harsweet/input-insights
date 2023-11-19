@@ -103,13 +103,13 @@ void keyReleased() {
 void drawDrop(char letter, int xCoord, int yCoord, float opacity) {
   char upChar = Character.toUpperCase(letter);
 
-  // Now we have drops of orange color for vowels
+  // Now we have drops of green color for vowels
   // And drops of sky blue color for consonants
   if (upChar == 'A' || upChar == 'E' || upChar == 'I' || upChar == 'O' || upChar == 'U') {
-    fill(135, 206, 235, opacity);
+    fill(0, 255, 64, opacity);
   }
   else {
-    fill(255, 165, 0, opacity);
+    fill(135, 206, 235, opacity);
   }
 
   shape(drop, xCoord, yCoord, 20, 20);
