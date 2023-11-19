@@ -124,9 +124,10 @@ void keyReleased() {
 
       LetterInfo lastLetterInfo = letterInfoList.get(listSize - 1);
 
-      // Superimposing a cross on the shape for that letter
+      // Decolorizing the shape for that letter
       // To symbolize its deletion
-      shape(cross, lastLetterInfo.xCoord, lastLetterInfo.yCoord, lastLetterInfo.sizeValue, lastLetterInfo.sizeValue);
+      fill(255, 255, 255);
+      shape(lastLetterInfo.shape, lastLetterInfo.xCoord, lastLetterInfo.yCoord, lastLetterInfo.sizeValue, lastLetterInfo.sizeValue);
 
       // Now removing it from the list as it has been deleted
       letterInfoList.remove(listSize - 1);
@@ -158,7 +159,7 @@ void drawDrop(char letter, int xCoord, int yCoord, float opacity) {
 
   shape(drop, xCoord, yCoord, 20, 20);
 
-  letterInfoList.add(new LetterInfo(xCoord, yCoord, 20));
+  letterInfoList.add(new LetterInfo(drop, xCoord, yCoord, 20));
 }
 
 
@@ -174,7 +175,7 @@ void drawSnowflake(char letter, int xCoord, int yCoord, float opacity) {
 
   shape(snowflake, xCoord, yCoord, svgSize, svgSize);
 
-  letterInfoList.add(new LetterInfo(xCoord, yCoord, svgSize));
+  letterInfoList.add(new LetterInfo(snowflake, xCoord, yCoord, svgSize));
 }
 
 
@@ -184,16 +185,18 @@ void drawKey(int xCoord, int yCoord, float opacity) {
 
   shape(keyShape, xCoord, yCoord, 20, 20);
 
-  letterInfoList.add(new LetterInfo(xCoord, yCoord, 20));
+  letterInfoList.add(new LetterInfo(keyShape, xCoord, yCoord, 20));
 }
 
 
 class LetterInfo {
+  PShape shape;
   float xCoord;
   float yCoord;
   float sizeValue;
 
-  public LetterInfo(float x, float y, float size) {
+  public LetterInfo(PShape s, float x, float y, float size) {
+    this.shape = s;
     this.xCoord = x;
     this.yCoord = y;
     this.sizeValue = size;
