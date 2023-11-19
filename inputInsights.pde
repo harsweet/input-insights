@@ -5,6 +5,7 @@ int windowHeight = 700;
 PShape star;
 PShape drop;
 PShape snowflake;
+PShape keyShape;
 
 int mouseClickStart, mouseClickEnd;
 int keyPressStart, keyPressEnd;
@@ -20,19 +21,25 @@ void setup(){
   // Setting up the background color
   background(255);
 
-  // Loading the shape
+  // Loading the shapes
   // star svg from https://iconmonstr.com/star-3-svg/
   star = loadShape("svgs/star.svg");
 
   // drop svg from https://iconmonstr.com/drop-1-svg/
   drop = loadShape("svgs/drop.svg");
 
-  // snowflake from https://svgsilh.com/image/38114.html
+  // snowflake svg from https://svgsilh.com/image/38114.html
   snowflake = loadShape("svgs/snowflake.svg");
 
+  // key svg from https://www.svgrepo.com/svg/4326/house-key
+  keyShape = loadShape("svgs/key.svg");
+
+
+  // Disabling styling so that we can apply our own styling
   star.disableStyle();
   drop.disableStyle();
   snowflake.disableStyle();
+  keyShape.disableStyle();
 }
 
 void draw() {
@@ -105,6 +112,9 @@ void keyReleased() {
   else if(Character.isDigit(keyChar)) {
     drawSnowflake(keyChar, randX, randY, opacity);
   }
+  else {
+    drawKey(randX, randY, opacity);
+  }
 }
 
 
@@ -135,4 +145,12 @@ void drawSnowflake(char letter, int xCoord, int yCoord, float opacity) {
   fill(105,105,105, opacity);
 
   shape(snowflake, xCoord, yCoord, svgSize, svgSize);
+}
+
+
+void drawKey(int xCoord, int yCoord, float opacity) {
+  // Choosing a black color for the fill
+  fill(0, 0, 0, opacity);
+
+  shape(keyShape, xCoord, yCoord, 20, 20);
 }
