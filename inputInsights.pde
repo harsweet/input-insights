@@ -24,7 +24,7 @@ void settings() {
 
 void setup(){
   // Setting up the background color
-  background(70, 70, 70);
+  background(255,255,244);
 
   // Initializing the list
   letterInfoList = new ArrayList<>();
