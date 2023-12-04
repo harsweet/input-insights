@@ -2,21 +2,22 @@
 int windowWidth = 1000;
 int windowHeight = 700;
 
+// Decalring variables for all the shapes that will be used later
 PShape star;
 PShape drop;
 PShape snowflake;
 PShape keyShape;
 PShape cross;
 
+// Declaring variables for keeping tracking of key presses and mouse clicks
 int mouseClickStart, mouseClickEnd;
 int keyPressStart, keyPressEnd;
 boolean keyPressRecord = true;
 
-
 // For keeping track of info about the letters typed
 ArrayList<LetterInfo> letterInfoList;
 
-
+// Setting up the width and size of the canvas
 void settings() {
   size(windowWidth, windowHeight);
 }
@@ -45,7 +46,7 @@ void setup(){
   // cross svg from https://www.svgrepo.com/svg/178323/cross-close
   cross = loadShape("svgs/cross.svg");
 
-  // Disabling styling so that we can apply our own styling
+  // Disabling styling so that we can apply our own styling to svgs
   star.disableStyle();
   drop.disableStyle();
   snowflake.disableStyle();
@@ -63,7 +64,8 @@ void mousePressed() {
   mouseClickStart = millis();
 }
 
-
+// Tracks when a mouse click is released
+// So that we can compute the click attributes and draw something accordingly
 void mouseReleased() {
   mouseClickEnd = millis();
   int clickDuration = (mouseClickEnd - mouseClickStart);
@@ -98,7 +100,8 @@ void keyPressed() {
   }
 }
 
-
+// Tracks when a key is released
+// So that we can compute the keystroke attributes and draw something accordingly
 void keyReleased() {
   char keyChar = key;
 
@@ -116,6 +119,7 @@ void keyReleased() {
   int randX = (int)(Math.random() * (windowWidth - 20)) + 10;
   int randY = (int)(Math.random() * (windowHeight -20)) + 10;
 
+  // In case the user presses backspace or delete key
   if (keyChar == '\b' || keyChar == '\u007F') {
     int listSize = letterInfoList.size();
 
@@ -133,18 +137,21 @@ void keyReleased() {
       letterInfoList.remove(listSize - 1);
     }
   }
+  // In case the user pressed an alphabet key
   else if(Character.isLetter(keyChar)) {
     drawDrop(keyChar, randX, randY, opacity);
   }
+  // In case the user pressed a number key
   else if(Character.isDigit(keyChar)) {
     drawSnowflake(keyChar, randX, randY, opacity);
   }
+  // For all other keypresses
   else {
     drawKey(randX, randY, opacity);
   }
 }
 
-
+// Function to draw a drop for alphabet keypresses
 void drawDrop(char letter, int xCoord, int yCoord, float opacity) {
   char upChar = Character.toUpperCase(letter);
 
@@ -159,10 +166,12 @@ void drawDrop(char letter, int xCoord, int yCoord, float opacity) {
 
   shape(drop, xCoord, yCoord, 20, 20);
 
+  // Also adding to letter info to the list remember it
+  // This comes handy in case the user presses backspace or delete and we have to decolorize it
   letterInfoList.add(new LetterInfo(drop, xCoord, yCoord, 20));
 }
 
-
+// Function to draw a drop for number keypresses
 void drawSnowflake(char letter, int xCoord, int yCoord, float opacity) {
   int integerValue = Character.getNumericValue(letter);
 
@@ -178,7 +187,7 @@ void drawSnowflake(char letter, int xCoord, int yCoord, float opacity) {
   letterInfoList.add(new LetterInfo(snowflake, xCoord, yCoord, svgSize));
 }
 
-
+// Function to draw a key shape for all other key presses
 void drawKey(int xCoord, int yCoord, float opacity) {
   // Choosing a black color for the fill
   fill(0, 0, 0, opacity);
@@ -188,7 +197,7 @@ void drawKey(int xCoord, int yCoord, float opacity) {
   letterInfoList.add(new LetterInfo(keyShape, xCoord, yCoord, 20));
 }
 
-
+// This class is used in storing info about the shape drawn for a given keypress
 class LetterInfo {
   PShape shape;
   float xCoord;
